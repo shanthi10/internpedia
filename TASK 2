@@ -1,0 +1,67 @@
+import java.util.HashMap;
+import java.util.Scanner;
+
+public class CurrencyConverter {
+
+    public static void main(String[] args) {
+
+        
+        HashMap<String, HashMap<String, Double>> exchangeRates = new HashMap<String, HashMap<String, Double>>();
+
+        HashMap<String, Double> usdRates = new HashMap<String, Double>();
+        usdRates.put("EUR", 0.98);
+        usdRates.put("JPY", 136.00);
+        usdRates.put("GBP", 0.87);
+        exchangeRates.put("USD", usdRates);
+
+        HashMap<String, Double> eurRates = new HashMap<String, Double>();
+        eurRates.put("USD", 1.11);
+        eurRates.put("JPY", 149.00);
+        eurRates.put("GBP", 0.78);
+        exchangeRates.put("EUR", eurRates);
+
+       
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Welcome to the Currency Converter!");
+
+        while (true) {
+            System.out.println("\nEnter amount to convert: ");
+            double amount = scanner.nextDouble();
+
+            System.out.println("Enter the currency you are converting from (e.g., USD, EUR, JPY, GBP): ");
+            String fromCurrency = scanner.next().toUpperCase();
+
+            System.out.println("Enter the currency you want to convert to (e.g., USD, EUR, JPY, GBP): ");
+            String toCurrency = scanner.next().toUpperCase();
+
+            
+            String result = convertCurrency(amount, fromCurrency, toCurrency, exchangeRates);
+            System.out.println(result);
+
+            System.out.println("\nDo you want to convert again? (y/n)");
+            String choice = scanner.next().toLowerCase();
+            if (!choice.equals("y")) {
+                break;
+            }
+        }
+
+        scanner.close();
+    }
+
+    public static String convertCurrency(double amount, String fromCurrency, String toCurrency, HashMap<String, HashMap<String, Double>> rates) {
+        if (fromCurrency.equals(toCurrency)) {
+            return amount + " " + fromCurrency + " is equivalent to " + amount + " " + toCurrency;
+        }
+
+        if (!rates.containsKey(fromCurrency) || !rates.get(fromCurrency).containsKey(toCurrency)) {
+            return "Conversion rate not available.";
+        }
+
+        double conversionRate = rates.get(fromCurrency).get(toCurrency);
+        double convertedAmount = amount * conversionRate;
+
+        return amount + " " + fromCurrency + " is equivalent to approximately " + String.format("%.2f", convertedAmount) + " " + toCurrency;
+    }
+}
